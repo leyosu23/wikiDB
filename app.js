@@ -80,6 +80,45 @@ app.route("/articles/:articleTitle")
   })
 })
 
+// put request is like replacing a broken bicycle with a complete brand-new one, 
+// completely wipe out the resources, for example, if only content is given for the update,
+// it will wipe out title for collection and no longer exists
+.put(function(req, res) {
+  Article.update(
+    {title: req.params.articleTitle},
+    {title: req.body.title, content:req.body.content},
+    {overwrite: true},
+    function(err){
+      if(!err){
+        res.send("Successfully updated an article")
+      }
+    }
+  )
+})
+
+// patch request tell mongo db to only update the fields we have provided 
+
+.patch(function(req, res) {
+  Article.update(
+    {title: req.params.articleTitle},
+    {$set: req.body},
+    function(err){
+      if(!err){
+        res.send("Successfully updated an article")
+      }
+    }
+  )
+})
+
+.delete(function(req, res){
+  Article.deleteOne({title: req.params.articleTitle}, function(err){
+    if (!err) {
+      res.send("Successfullyl deleted");
+    } else {
+      res.send("No matching article was found");
+    }
+  })
+})
 
 app.listen(3000, function() {
   console.log("Server started on port 3000");
