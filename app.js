@@ -24,6 +24,8 @@ const articleSchema = {
 const Article = mongoose.model("Article", articleSchema);
 
 // chained Route Handlers
+
+// request for all articles
 app.route("/articles")
 
 .get(function(req, res){
@@ -64,6 +66,19 @@ app.route("/articles")
   });
 })
 
+// request for a specific article
+
+app.route("/articles/:articleTitle")
+
+.get(function(req, res){
+  Article.findOne({title: req.params.articleTitle}, function(err, foundArticle){
+    if (foundArticle) {
+      res.send(foundArticle);
+    } else {
+      res.send("No matching article was found");
+    }
+  })
+})
 
 
 app.listen(3000, function() {
